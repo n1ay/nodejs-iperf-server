@@ -1,20 +1,21 @@
 #!/bin/bash
 
 mul() {
-	echo $1 $2 | awk '{ print $1*$2 }' 
+	echo $1 $2 | awk '{ print $1*$2 }'
 }
 
 run_test() {
 
-	throughput=$(iperf -c 192.168.121.100 -t 10 -i 1 | sed -n '16p' | sed 's/.*Bytes *//g')
+	throughput=$(timeout 10 iperf -c 192.168.121.100 -t 8 -i 1 | sed -n '14p' | sed 's/.*Bytes *//g')
 	numeric_value=$(echo $throughput | awk '{ print $1 }')
 	metric_prefix=$(echo $throughput | awk '{ print $2 }')
 
 	case "$metric_prefix" in
-		"Gbits/sec") value=$(mul $numeric_value 1000000000);;
-		"Mbits/sec") value=$(mul $numeric_value 1000000);;
-		"Kbits/sec") value=$(mul $numeric_value 1000);;
-		*) value=$numeric_value;;
+		"Gbits/sec") value=$(mul $numeric_value 1000);;
+		"Mbits/sec") value=$numeric_value;;
+		"Kbits/sec") value=$(mul $numeric_value 0.001);;
+		"bits/sec") value=$(mul $numeric_value 0.000001);;
+		*) value=0;;
 	esac
 
 	echo \"$value\" > data.json
