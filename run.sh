@@ -3,11 +3,11 @@
 #restart wpa, dhclient and nodejs server every X seconds
 restart_timeout=7200
 
-if [ -z "$(uname) | grep -i darwin" ]
+if [ "$(uname) | grep -i darwin" ]
 then
-    sys_type='linux'
-else
     sys_type='darwin'
+else
+    sys_type='linux'
 fi
 
 clean_darwin() {
