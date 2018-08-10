@@ -5,12 +5,12 @@ mul() {
 }
 
 run_test() {
-
+    echo '"0"' > data.json
     if [ "$(uname)" == "Darwin" ]
     then
-	    throughput=$(gtimeout 10 iperf -c 192.168.121.100 -t 8 -i 1 | sed -n '14p' | sed 's/.*Bytes *//g')
+	    throughput=$(gtimeout --signal=9 10 iperf -c 192.168.121.100 -t 8 -i 1 | sed -n '14p' | sed 's/.*Bytes *//g')
     else
-        throughput=$(timeout 10 iperf -c 192.168.121.100 -t 8 -i 1 | sed -n '14p' | sed 's/.*Bytes *//g')
+        throughput=$(timeout 10 iperf --signal=9 -c 192.168.121.100 -t 8 -i 1 | sed -n '14p' | sed 's/.*Bytes *//g')
     fi
     numeric_value=$(echo $throughput | awk '{ print $1 }')
 	metric_prefix=$(echo $throughput | awk '{ print $2 }')
