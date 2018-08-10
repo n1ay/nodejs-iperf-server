@@ -5,7 +5,11 @@ mul() {
 }
 
 run_test() {
-    echo '"0"' > data.json
+    if ! [ -f data.json ]
+    then
+        echo '"0"' > data.json
+    fi
+
     if [ "$(uname)" == "Darwin" ]
     then
 	    throughput=$(gtimeout --signal=9 10 iperf -c 192.168.121.100 -t 8 -i 1 | sed -n '14p' | sed 's/.*Bytes *//g')
